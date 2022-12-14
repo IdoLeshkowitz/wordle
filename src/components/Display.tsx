@@ -1,4 +1,35 @@
-const Display =()=>{
-    return (<div className="display-container"></div>)
+const Display = () => {
+    return (<div className="display">
+        <div className="display-item"></div>
+        <div className="display-item"></div>
+        <div className="display-item"></div>
+        <div className="display-item"></div>
+        <div className="display-item"></div>
+        <div className="display-item"></div>
+        <div className="display-item"></div>
+        <div className="display-item"></div>
+        <div className="display-item"></div>
+        <div className="display-item"></div>
+        <div className="display-item"></div>
+        <div className="display-item"></div>
+        <div className="display-item"></div>
+        <div className="display-item"></div>
+        <div className="display-item"></div>
+        <div className="display-item"></div>
+        <div className="display-item"></div>
+        <div className="display-item"></div>
+        <div className="display-item"></div>
+        <div className="display-item"></div>
+        <div className="display-item"></div>
+        <div className="display-item"></div>
+        <div className="display-item"></div>
+        <div className="display-item"></div>
+        <div className="display-item"></div>
+        <div className="display-item"></div>
+        <div className="display-item"></div>
+        <div className="display-item"></div>
+        <div className="display-item"></div>
+        <div className="display-item"></div>
+    </div>)
 }
 export default Display;

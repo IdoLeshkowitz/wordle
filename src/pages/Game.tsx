@@ -4,11 +4,11 @@ import Display from "../components/Display";
 
 const Game = () => {
     return (
-        <div className="game_page_container">
+        <div className="game_page">
         <Header/>
-            <div className="game_main-area_container">
-                <Keyboard/>
+            <div className="game_page-main">
                 <Display/>
+                <Keyboard/>
             </div>
         </div>
     )

@@ -1,6 +1,6 @@
 const Header = ()=>{
     return (
-        <header className="game-header-container"> header </header>
+        <header className="game_page-header"> header </header>
     )
 }
 
