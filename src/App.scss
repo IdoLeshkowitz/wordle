@@ -39,3 +39,27 @@
 .read-the-docs {
   color: #888;
 }
+
+
+
+
+
+body {
+  background-color: black;
+}
+
+
+
+
+
+
+
+
+.game_page_container{
+  position: fixed;top:0;bottom: 0;right: 0;left: 0;
+  display : flex;
+  & .game_main-area_container{
+    flex-basis: 10%;
+    background-color: aqua;
+  }
+}
