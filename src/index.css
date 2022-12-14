@@ -1,84 +1,102 @@
 :root {
   font-family: "Roboto Light", sans-serif;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
   font-size: 10px;
+  -webkit-font-smoothing: antialiased;
+  font-synthesis: none;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  position: fixed;
-  top: 0;
   bottom: 0;
   left: 0;
+  position: fixed;
   right: 0;
+  top: 0;
 }
 
 button {
-  border-radius: 8px;
   border: 1px solid transparent;
-  font-weight: 500;
+  border-radius: 8px;
   cursor: pointer;
+  font-weight: 500;
 }
 
 .game_page {
-  position: fixed;
-  right: 0;
-  left: 0;
   bottom: 0;
-  top: 0;
   display: flex;
   flex-direction: column;
+  left: 0;
+  position: relative;
+  right: 0;
+  top: 0;
 }
 .game_page-header {
-  flex-basis: 50px;
-  background-color: aqua;
   align-self: stretch;
+  background-color: aqua;
+  flex-basis: 50px;
 }
 .game_page-main {
-  background-color: pink;
-  height: 100%;
-  width: min(100%, 500px);
   align-self: center;
   display: flex;
   flex-direction: column;
+  height: 100%;
+  width: min(100%, 500px);
 }
 .game_page-main .keyboard {
-  flex-basis: 300px;
+  --keyboard-btn-gap: calc(var(--keyboard-btn-height) / 10);
   --keyboard-btn-height: 4rem;
-  --keyboard-btn-gap:calc(var(--keyboard-btn-height) / 10);
   display: flex;
+  flex-basis: 300px;
   flex-direction: column;
   row-gap: var(--keyboard-btn-gap);
 }
 .game_page-main .keyboard-row {
+  column-gap: var(--keyboard-btn-gap);
   display: flex;
   justify-content: center;
-  column-gap: var(--keyboard-btn-gap);
 }
 .game_page-main .keyboard-btn {
   flex-basis: var(--keyboard-btn-height);
   height: var(--keyboard-btn-height);
 }
-.game_page-main .keyboard .wide {
+.game_page-main .keyboard.wide {
   flex-basis: calc(var(--keyboard-btn-height) * 1.5);
 }
 .game_page-main .display {
+  padding: 2rem;
+  align-content: center;
+  column-gap: 1rem;
+  display: grid;
+  flex-basis: 100%;
+  grid-template-columns: repeat(5, var(--display-item-height));
+  grid-template-rows: repeat(6, var(--display-item-height));
   --display-item-height: 5rem;
   justify-content: center;
-  align-content: center;
-  display: grid;
-  grid-template-rows: repeat(6, var(--display-item-height));
-  grid-template-columns: repeat(5, var(--display-item-height));
-  flex-basis: 100%;
-  column-gap: 1rem;
   row-gap: 1rem;
 }
 .game_page-main .display-item {
   border: 1px solid black;
   border-radius: 0.5rem;
+}
+
+.modal-container {
+  justify-content: center;
+  background-color: hsla(0deg, 0%, 20%, 0.6);
+  bottom: 0;
+  display: flex;
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+  transition: all 0.3s;
+}
+.modal-container .modal-content {
+  align-self: center;
+  height: min(500px, 100%);
+  background: white;
+  flex-basis: 400px;
 }
 
 /*# sourceMappingURL=index.css.map */
