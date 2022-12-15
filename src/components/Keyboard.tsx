@@ -1,39 +1,44 @@
 const Keyboard = () => {
+    const keyboardClicked = (e: React.MouseEvent<HTMLButtonElement>) => {
+        console.log(e.currentTarget.innerText);
+    }
+
+    const currentFocus = 0;
     return (
         <div className="keyboard">
             <div className="keyboard-row">
-                <button className="keyboard-btn">W</button>
-                <button className="keyboard-btn">E</button>
-                <button className="keyboard-btn">Q</button>
-                <button className="keyboard-btn">R</button>
-                <button className="keyboard-btn">T</button>
-                <button className="keyboard-btn">Y</button>
-                <button className="keyboard-btn">U</button>
-                <button className="keyboard-btn">I</button>
-                <button className="keyboard-btn">O</button>
-                <button className="keyboard-btn">P</button>
+                <button className="keyboard-btn" onClick={keyboardClicked}>W</button>
+                <button className="keyboard-btn" onClick={keyboardClicked}>E</button>
+                <button className="keyboard-btn" onClick={keyboardClicked}>Q</button>
+                <button className="keyboard-btn" onClick={keyboardClicked}>R</button>
+                <button className="keyboard-btn" onClick={keyboardClicked}>T</button>
+                <button className="keyboard-btn" onClick={keyboardClicked}>Y</button>
+                <button className="keyboard-btn" onClick={keyboardClicked}>U</button>
+                <button className="keyboard-btn" onClick={keyboardClicked}>I</button>
+                <button className="keyboard-btn" onClick={keyboardClicked}>O</button>
+                <button className="keyboard-btn" onClick={keyboardClicked}>P</button>
             </div>
             <div className="keyboard-row">
-                <button className="keyboard-btn">A</button>
-                <button className="keyboard-btn">S</button>
-                <button className="keyboard-btn">D</button>
-                <button className="keyboard-btn">F</button>
-                <button className="keyboard-btn">G</button>
-                <button className="keyboard-btn">H</button>
-                <button className="keyboard-btn">J</button>
-                <button className="keyboard-btn">K</button>
-                <button className="keyboard-btn">L</button>
+                <button className="keyboard-btn" onClick={keyboardClicked}>A</button>
+                <button className="keyboard-btn" onClick={keyboardClicked}>S</button>
+                <button className="keyboard-btn" onClick={keyboardClicked}>D</button>
+                <button className="keyboard-btn" onClick={keyboardClicked}>F</button>
+                <button className="keyboard-btn" onClick={keyboardClicked}>G</button>
+                <button className="keyboard-btn" onClick={keyboardClicked}>H</button>
+                <button className="keyboard-btn" onClick={keyboardClicked}>J</button>
+                <button className="keyboard-btn" onClick={keyboardClicked}>K</button>
+                <button className="keyboard-btn" onClick={keyboardClicked}>L</button>
             </div>
             <div className="keyboard-row">
-                <button className="keyboard-btn wide">ENTER</button>
-                <button className="keyboard-btn">Z</button>
-                <button className="keyboard-btn">X</button>
-                <button className="keyboard-btn">C</button>
-                <button className="keyboard-btn">V</button>
-                <button className="keyboard-btn">B</button>
-                <button className="keyboard-btn">N</button>
-                <button className="keyboard-btn">M</button>
-                <button className="keyboard-btn wide">BACK</button>
+                <button className="keyboard-btn wide" onClick={keyboardClicked}>ENTER</button>
+                <button className="keyboard-btn" onClick={keyboardClicked}>Z</button>
+                <button className="keyboard-btn" onClick={keyboardClicked}>X</button>
+                <button className="keyboard-btn" onClick={keyboardClicked}>C</button>
+                <button className="keyboard-btn" onClick={keyboardClicked}>V</button>
+                <button className="keyboard-btn" onClick={keyboardClicked}>B</button>
+                <button className="keyboard-btn" onClick={keyboardClicked}>N</button>
+                <button className="keyboard-btn" onClick={keyboardClicked}>M</button>
+                <button className="keyboard-btn wide" onClick={keyboardClicked}>BACK</button>
             </div>
         </div>
     )

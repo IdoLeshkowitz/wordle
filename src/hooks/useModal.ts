@@ -1,11 +1,11 @@
 import {useState} from "react";
 
-export interface ModalState {
+export interface UseModal {
     isOpen: boolean;
     toggle: () => void;
 }
 
-export const modalState = (): ModalState => {
+export const useModal = (): UseModal => {
     const [isOpen, setIsOpen] = useState(true);
     const toggle = () => setIsOpen(!isOpen);
     return {isOpen, toggle};
