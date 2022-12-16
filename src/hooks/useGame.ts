@@ -1,9 +1,12 @@
-import {useState} from "react";
+import {useContext} from "react";
+import {ModalContext} from "../providers/modal-context";
 
 export interface UseGame {
-    onKeyDown: (event: KeyboardEvent) => void;
-    allWordsGuessed:string;
+    onKeyPressed: (key: string) => void;
+    allWordsGuessed: string;
 }
 
+
 export const useGame = (): any => {
+
 }
