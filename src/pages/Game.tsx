@@ -66,19 +66,31 @@ const useGame = () => {
     }
     return {onKeyboardClick, onHelpButtonClick, helpModalActive, guessedWords, currentWord};
 }
-export const GuessedWordsContext = React.createContext<{ guessedWords: null | string[] }>({guessedWords: null});
-const GuessedWordsProvider = ({children}: any) => {
+
+const useDisplay = () => {
     const {guessedWords} = useGame();
+    const getCurrentDisplayGrid = () => {
+        const displayGrid = [];
+        for (let i = 0; i < 30; i++) {
+            displayGrid.push(guessedWords ? (guessedWords[i] || '') : '');
+        }
+        console.log(guessedWords);
+        return displayGrid;
+    }
+    return {getCurrentDisplayGrid}
+}
+export const DisplayContext = React.createContext<any>(null);
+const DisplayProvider = ({children, guessedWords}: any) =>{
+    const {getCurrentDisplayGrid} = useDisplay();
     return (
-        <GuessedWordsContext.Provider value={{guessedWords}}>
+        <DisplayContext.Provider value={{getCurrentDisplayGrid}}>
             {children}
-        </GuessedWordsContext.Provider>
-    );
+        </DisplayContext.Provider>
+    )
 }
 const Game = () => {
     const {onKeyboardClick, onHelpButtonClick, helpModalActive, guessedWords, currentWord} = useGame();
-    // if guessedWords has last then five strings add empty strings to make it have 5 strings
-    const displayedGuessedWords = guessedWords ? guessedWords.length < 5 ? [...guessedWords, ...Array(5 - guessedWords.length).fill('')] : guessedWords : ['', '', '', '', ''];
+    const {getCurrentDisplayGrid} = useDisplay();
     useEffect(() => {
         window.addEventListener("keydown", onUserKeyboardClick);
         return () => {
@@ -107,13 +119,10 @@ const Game = () => {
                        title="info"><AiFillInfoCircle/></label>
             </header>
             <div className="game_page-main">
-                <Display>
-                    {displayedGuessedWords.map((guessedWord, index) => {
-                        return (
-                            <Display.Row guessedWord={guessedWord} key={index}></Display.Row>
-                        )
-                    })}
-                </Display>
+                <DisplayProvider guessedWords={guessedWords}>
+                    <Display>
+                    </Display>
+                </DisplayProvider>
                 <Keyboard onKeyboardClick={onVirtualKeyboardClick}/>
             </div>
         </div>
