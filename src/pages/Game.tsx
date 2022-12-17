@@ -1,64 +1,120 @@
 // import {useGame} from "../hooks/useGame";
-import React, {useCallback, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import Keyboard from "../components/Keyboard";
 import Display from "../components/Display";
 import {AiFillInfoCircle} from "react-icons/ai";
 
-const Game = () => {
-    const [gameMode, setGameMode] = useState('Modal');//Modal||Play
-    const [currentWord, setCurrentWord] = useState('');
-    const checkKeyPress = useCallback((e: any) => {
-        const key = e.key.toUpperCase();
-        const isKeySingleAlphabet = /^[A-Z]$/.test(key);
-        const isKeyLegal = isKeySingleAlphabet || key === 'BACKSPACE' || key === 'ENTER' || key === 'ESCAPE';
-        if (!isKeyLegal) return; // ignore illegal keys
-        onKeyboardClick(key);
-    }, []);
-    useEffect(() => {
-        window.addEventListener("keydown", checkKeyPress);
-        return () => {
-            window.removeEventListener("keydown", checkKeyPress);
-        };
-    }, [checkKeyPress]);
+const useGame = () => {
+    const [helpModalActive, setHelpModalActive] = useState(true);//help modal active or not
+    const [currentWord, setCurrentWord] = useState("");//current word
+    const [guessedWords, setGuessedWords] = useState<string[] | null>(null);//guessed words
+    const [currentWordIndex, setCurrentWordIndex] = useState(0);//current guessed word index
     const onKeyboardClick = (key: string) => {
-        switch (gameMode){
-            case 'Modal':
-                if (key === 'ENTER' || key === 'ESCAPE') {
-                    console.log('clicked keyboard');
-                    setGameMode('Play');
-                }
-                break;
+        key = key.toUpperCase();
+        if (helpModalActive) {
+            const isLegalKey = key === 'ENTER' || key === 'ESCAPE';
+            if (key !== 'ENTER' && key !== 'ESCAPE') return; // ignore keys other than enter and escape
+            else {
+                setHelpModalActive(false)
+            }
+            return
         }
-        // if modal is active and key is ENTER or ESCAPE then toggle modal
-        // //if key is char and current word is less than 5 chars then add char to current word
-        // if (/^[A-Z]$/.test(key) && currentWord.length < 5) setCurrentWord((prev) => prev + key);
-        // //if key is BACKSPACE and current word is not empty then remove last char from current word
-        // if (key === 'BACKSPACE' && currentWord.length > 0) setCurrentWord((prev) => prev.slice(0, -1));
-    }
-    const toggleModal = () => {
-        console.log('clicked checkbox');
-        if (gameMode === 'Modal') setGameMode('Play');
-        if (gameMode === 'Play') {
+        if (!helpModalActive) {
+            const getActionByKey = (key: string) => {
+                if (key === 'BACKSPACE') return 'BACKSPACE';
+                if (key === 'ENTER') return 'ENTER';
+                if (/^[A-Z]$/.test(key)) return 'LETTER';
+                return 'OTHER';
+            }
+            const action = getActionByKey(key);
+            switch (action) {
+                case 'BACKSPACE':
+                    const newCurrentWord = currentWord.slice(0, -1);
+                    setCurrentWord(newCurrentWord);
+                    const newGuessedWords = [...guessedWords || ''];
+                    newGuessedWords[currentWordIndex] = newCurrentWord;
+                    setGuessedWords(newGuessedWords);
+                    break;
+                case 'ENTER':
+                    if (currentWord.length === 5 && currentWordIndex < 5) {
+                        const newGuessedWords = [...guessedWords || ''];
+                        setGuessedWords(newGuessedWords);
+                        setCurrentWordIndex(currentWordIndex + 1);
+                        setCurrentWord("");
 
-            setGameMode('Modal');}
+                    }
+                    break;
+                case 'LETTER':
+                    if (currentWord.length < 5) {
+                        const updatedCurrentWord = currentWord + key;
+                        const updateCurrentWord = (updatedCurrentWord: any) => setCurrentWord(updatedCurrentWord);
+                        // replace guessedWords at currentWordIndex with updatedCurrentWord
+                        const newGuessedWords = [...guessedWords || ''];
+                        newGuessedWords[currentWordIndex] = updatedCurrentWord;
+                        const updateGuessedWords = (newGuessedWords: any) => setGuessedWords(newGuessedWords);
+                        updateCurrentWord(updatedCurrentWord);
+                        updateGuessedWords(newGuessedWords);
+                    }
+            }
+        }
+
+    }
+
+    const onHelpButtonClick = () => {
+        console.log('help button clicked', helpModalActive);
+        setHelpModalActive(!helpModalActive);
+    }
+    return {onKeyboardClick, onHelpButtonClick, helpModalActive, guessedWords, currentWord};
+}
+export const GuessedWordsContext = React.createContext<{ guessedWords: null | string[] }>({guessedWords: null});
+const GuessedWordsProvider = ({children}: any) => {
+    const {guessedWords} = useGame();
+    return (
+        <GuessedWordsContext.Provider value={{guessedWords}}>
+            {children}
+        </GuessedWordsContext.Provider>
+    );
+}
+const Game = () => {
+    const {onKeyboardClick, onHelpButtonClick, helpModalActive, guessedWords, currentWord} = useGame();
+    // if guessedWords has last then five strings add empty strings to make it have 5 strings
+    const displayedGuessedWords = guessedWords ? guessedWords.length < 5 ? [...guessedWords, ...Array(5 - guessedWords.length).fill('')] : guessedWords : ['', '', '', '', ''];
+    useEffect(() => {
+        window.addEventListener("keydown", onUserKeyboardClick);
+        return () => {
+            window.removeEventListener("keydown", onUserKeyboardClick);
+        };
+    }, [onKeyboardClick]);
+    const onVirtualKeyboardClick = (key: string) => {
+        onKeyboardClick(key);
+    }
+    const onUserKeyboardClick = (event: KeyboardEvent) => {
+        onKeyboardClick(event.key);
     }
     return (
         <div className="game_page">
-            {gameMode === "Modal" &&
+            {helpModalActive &&
                 <div className='modal-container active' tabIndex={0}>
                     <div className="modal-content">
-                        {/*<input  className="modal-content-escape_btn">X</input>*/}
+                        <button className="modal-content-escape_btn" onClick={onHelpButtonClick}>X</button>
                         <p className="modal-content-description">game instructions</p>
                     </div>
                 </div>
             }
             <header className="game_page-header">
-                <input type="checkbox"  onChange={toggleModal} id="zibi" className="hidden"/>
-                <label htmlFor="zibi" className="game_page-header-info_btn" title="info"><AiFillInfoCircle/></label>
+                <input type="checkbox" onChange={onHelpButtonClick} id="openModal" className="hidden"/>
+                <label htmlFor="openModal" className="game_page-header-info_btn"
+                       title="info"><AiFillInfoCircle/></label>
             </header>
             <div className="game_page-main">
-                <Display/>
-                <Keyboard/>
+                <Display>
+                    {displayedGuessedWords.map((guessedWord, index) => {
+                        return (
+                            <Display.Row guessedWord={guessedWord} key={index}></Display.Row>
+                        )
+                    })}
+                </Display>
+                <Keyboard onKeyboardClick={onVirtualKeyboardClick}/>
             </div>
         </div>
     );

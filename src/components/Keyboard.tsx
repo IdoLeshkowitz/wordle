@@ -1,6 +1,12 @@
-const Keyboard = () => {
+interface KeyboardProps {
+    onKeyboardClick: (letter: string) => void;
+}
+
+const Keyboard = (props:KeyboardProps) => {
+    const {onKeyboardClick} = props;
     const keyboardClicked = (e: React.MouseEvent<HTMLButtonElement>) => {
-        console.log(e.currentTarget.innerText);
+        const letter = e.currentTarget.innerText;
+        onKeyboardClick(letter);
     }
 
     const currentFocus = 0;
@@ -38,7 +44,7 @@ const Keyboard = () => {
                 <button className="keyboard-btn" onClick={keyboardClicked}>B</button>
                 <button className="keyboard-btn" onClick={keyboardClicked}>N</button>
                 <button className="keyboard-btn" onClick={keyboardClicked}>M</button>
-                <button className="keyboard-btn wide" onClick={keyboardClicked}>BACK</button>
+                <button className="keyboard-btn wide" onClick={keyboardClicked}>BACKSPACE</button>
             </div>
         </div>
     )

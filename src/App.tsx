@@ -1,12 +1,13 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-function App() {
-  const [count, setCount] = useState(0)
+import React, {useState} from 'react'
+import {RouterProvider} from "react-router-dom";
+import {router} from "./router";
 
-  return (
-<>
-</>
-  )
+function App() {
+    return (
+        <>
+            <RouterProvider router={router}/>
+        </>
+    )
 }
 
 export default App
