@@ -1,54 +1,128 @@
-interface KeyboardProps {
-    onKeyboardClick: (letter: string) => void;
-}
+import {useContext, useEffect} from "react";
+import {KeyboardContext} from "../pages/Game";
+import {GameState} from "../gameLogic/GameState";
+import {GameActionType} from "../gameLogic/gameReducer";
 
-const Keyboard = (props:KeyboardProps) => {
-    const {onKeyboardClick} = props;
-    const keyboardClicked = (e: React.MouseEvent<HTMLButtonElement>) => {
-        const letter = e.currentTarget.innerText;
-        onKeyboardClick(letter);
+const helperFunctions = {
+    isKeyALetter: (key: string) => {return (/^[A-Z]$/.test(key))},
+    isKeyBackspace: (key: string) => {return (key === "BACKSPACE")},
+    isKeyEscape: (key: string) => {return (key === "ESCAPE")},
+    isKeyEnter: (key: string) => {return (key === "ENTER")},
+    isCurrentWordFull: (state: GameState) => {
+        const {guessedWords, currentWordIndex} = state;
+        return guessedWords[currentWordIndex].length < 5;
+    },
+}
+const Keyboard = () => {
+    const {dispatch, state} = useContext(KeyboardContext);
+    const {isKeyALetter,isKeyEscape, isKeyBackspace, isKeyEnter, isCurrentWordFull} = helperFunctions;
+    const onKeyboardClick = (key: string) => {
+        key = key.toUpperCase();
+        if ((isKeyEscape(key) || isKeyEnter(key)) && state.helpModalActive) {
+            dispatch({type: GameActionType.CLOSE_HELP_MODAL});
+        }
     }
 
-    const currentFocus = 0;
+    useEffect(() => {
+        window.addEventListener("keyup", (e: KeyboardEvent) => onKeyboardClick(e.key));
+        return () => {
+            window.removeEventListener("keydown", (e: KeyboardEvent) => onKeyboardClick(e.key));
+        }}, []);
+
     return (
         <div className="keyboard">
             <div className="keyboard-row">
-                <button className="keyboard-btn" onClick={keyboardClicked}>W</button>
-                <button className="keyboard-btn" onClick={keyboardClicked}>E</button>
-                <button className="keyboard-btn" onClick={keyboardClicked}>Q</button>
-                <button className="keyboard-btn" onClick={keyboardClicked}>R</button>
-                <button className="keyboard-btn" onClick={keyboardClicked}>T</button>
-                <button className="keyboard-btn" onClick={keyboardClicked}>Y</button>
-                <button className="keyboard-btn" onClick={keyboardClicked}>U</button>
-                <button className="keyboard-btn" onClick={keyboardClicked}>I</button>
-                <button className="keyboard-btn" onClick={keyboardClicked}>O</button>
-                <button className="keyboard-btn" onClick={keyboardClicked}>P</button>
+                <button className="keyboard-btn"
+                        onClick={(e: any) => onKeyboardClick(e.currentTarget.innerText)}>A
+                </button>
+                <button className="keyboard-btn"
+                        onClick={(e: any) => onKeyboardClick(e.currentTarget.innerText)}>S
+                </button>
+                <button className="keyboard-btn"
+                        onClick={(e: any) => onKeyboardClick(e.currentTarget.innerText)}>D
+                </button>
+                <button className="keyboard-btn"
+                        onClick={(e: any) => onKeyboardClick(e.currentTarget.innerText)}>F
+                </button>
+                <button className="keyboard-btn"
+                        onClick={(e: any) => onKeyboardClick(e.currentTarget.innerText)}>G
+                </button>
+                <button className="keyboard-btn"
+                        onClick={(e: any) => onKeyboardClick(e.currentTarget.innerText)}>H
+                </button>
+                <button className="keyboard-btn"
+                        onClick={(e: any) => onKeyboardClick(e.currentTarget.innerText)}>J
+                </button>
+                <button className="keyboard-btn"
+                        onClick={(e: any) => onKeyboardClick(e.currentTarget.innerText)}>K
+                </button>
+                <button className="keyboard-btn"
+                        onClick={(e: any) => onKeyboardClick(e.currentTarget.innerText)}>L
+                </button>
             </div>
             <div className="keyboard-row">
-                <button className="keyboard-btn" onClick={keyboardClicked}>A</button>
-                <button className="keyboard-btn" onClick={keyboardClicked}>S</button>
-                <button className="keyboard-btn" onClick={keyboardClicked}>D</button>
-                <button className="keyboard-btn" onClick={keyboardClicked}>F</button>
-                <button className="keyboard-btn" onClick={keyboardClicked}>G</button>
-                <button className="keyboard-btn" onClick={keyboardClicked}>H</button>
-                <button className="keyboard-btn" onClick={keyboardClicked}>J</button>
-                <button className="keyboard-btn" onClick={keyboardClicked}>K</button>
-                <button className="keyboard-btn" onClick={keyboardClicked}>L</button>
+                <button className="keyboard-btn"
+                        onClick={(e: any) => onKeyboardClick(e.currentTarget.innerText)}>W
+                </button>
+                <button className="keyboard-btn"
+                        onClick={(e: any) => onKeyboardClick(e.currentTarget.innerText)}>E
+                </button>
+                <button className="keyboard-btn"
+                        onClick={(e: any) => onKeyboardClick(e.currentTarget.innerText)}>Q
+                </button>
+                <button className="keyboard-btn"
+                        onClick={(e: any) => onKeyboardClick(e.currentTarget.innerText)}>R
+                </button>
+                <button className="keyboard-btn"
+                        onClick={(e: any) => onKeyboardClick(e.currentTarget.innerText)}>T
+                </button>
+                <button className="keyboard-btn"
+                        onClick={(e: any) => onKeyboardClick(e.currentTarget.innerText)}>Y
+                </button>
+                <button className="keyboard-btn"
+                        onClick={(e: any) => onKeyboardClick(e.currentTarget.innerText)}>U
+                </button>
+                <button className="keyboard-btn"
+                        onClick={(e: any) => onKeyboardClick(e.currentTarget.innerText)}>I
+                </button>
+                <button className="keyboard-btn"
+                        onClick={(e: any) => onKeyboardClick(e.currentTarget.innerText)}>O
+                </button>
+                <button className="keyboard-btn"
+                        onClick={(e: any) => onKeyboardClick(e.currentTarget.innerText)}>P
+                </button>
             </div>
             <div className="keyboard-row">
-                <button className="keyboard-btn wide" onClick={keyboardClicked}>ENTER</button>
-                <button className="keyboard-btn" onClick={keyboardClicked}>Z</button>
-                <button className="keyboard-btn" onClick={keyboardClicked}>X</button>
-                <button className="keyboard-btn" onClick={keyboardClicked}>C</button>
-                <button className="keyboard-btn" onClick={keyboardClicked}>V</button>
-                <button className="keyboard-btn" onClick={keyboardClicked}>B</button>
-                <button className="keyboard-btn" onClick={keyboardClicked}>N</button>
-                <button className="keyboard-btn" onClick={keyboardClicked}>M</button>
-                <button className="keyboard-btn wide" onClick={keyboardClicked}>BACKSPACE</button>
+                <button className="keyboard-btn wide"
+                        onClick={(e: any) => onKeyboardClick(e.currentTarget.innerText)}>ENTER
+                </button>
+                <button className="keyboard-btn"
+                        onClick={(e: any) => onKeyboardClick(e.currentTarget.innerText)}>Z
+                </button>
+                <button className="keyboard-btn"
+                        onClick={(e: any) => onKeyboardClick(e.currentTarget.innerText)}>X
+                </button>
+                <button className="keyboard-btn"
+                        onClick={(e: any) => onKeyboardClick(e.currentTarget.innerText)}>C
+                </button>
+                <button className="keyboard-btn"
+                        onClick={(e: any) => onKeyboardClick(e.currentTarget.innerText)}>V
+                </button>
+                <button className="keyboard-btn"
+                        onClick={(e: any) => onKeyboardClick(e.currentTarget.innerText)}>B
+                </button>
+                <button className="keyboard-btn"
+                        onClick={(e: any) => onKeyboardClick(e.currentTarget.innerText)}>N
+                </button>
+                <button className="keyboard-btn"
+                        onClick={(e: any) => onKeyboardClick(e.currentTarget.innerText)}>M
+                </button>
+                <button className="keyboard-btn wide"
+                        onClick={(e: any) => onKeyboardClick(e.currentTarget.innerText)}>BACKSPACE
+                </button>
             </div>
         </div>
     )
 }
-
 
 export default Keyboard;
