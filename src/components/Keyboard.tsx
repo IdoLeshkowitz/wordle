@@ -8,18 +8,17 @@ const helperFunctions = {
     isKeyBackspace: (key: string) => {return (key === "BACKSPACE")},
     isKeyEscape: (key: string) => {return (key === "ESCAPE")},
     isKeyEnter: (key: string) => {return (key === "ENTER")},
-    isCurrentWordFull: (state: GameState) => {
-        const {guessedWords, currentWordIndex} = state;
-        return guessedWords[currentWordIndex].length < 5;
-    },
 }
 const Keyboard = () => {
     const {dispatch, state} = useContext(KeyboardContext);
-    const {isKeyALetter,isKeyEscape, isKeyBackspace, isKeyEnter, isCurrentWordFull} = helperFunctions;
+    const {isKeyALetter,isKeyEscape, isKeyBackspace, isKeyEnter} = helperFunctions;
     const onKeyboardClick = (key: string) => {
         key = key.toUpperCase();
-        if ((isKeyEscape(key) || isKeyEnter(key)) && state.helpModalActive) {
-            dispatch({type: GameActionType.CLOSE_HELP_MODAL});
+        if (isKeyEnter(key))dispatch({type : GameActionType.ENTER});
+        if (isKeyEscape(key))dispatch({type : GameActionType.ESCAPE});
+        if (isKeyBackspace(key))dispatch({type : GameActionType.REMOVE_LETTER});
+        if(isKeyALetter(key)) {
+            dispatch({type: GameActionType.ADD_LETTER, payload: key});
         }
     }
 

@@ -99,6 +99,11 @@ button {
 .game_page-main .display-item {
   border: 1px solid black;
   border-radius: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-basis: var(--display-item-height);
+  font-size: calc(var(--display-item-height) / 3);
 }
 .game_page-main .display-item.focused {
   outline: 1px solid red;
@@ -131,6 +136,9 @@ button {
   align-self: end;
   background-color: unset;
   cursor: pointer;
+}
+.hidden {
+  display: none;
 }
 
 /*# sourceMappingURL=index.css.map */

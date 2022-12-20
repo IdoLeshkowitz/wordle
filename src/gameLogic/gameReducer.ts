@@ -2,17 +2,27 @@ import {gameInitialState, GameState} from "./GameState";
 import {GameAction, GameActionType} from "./gameActions";
 
 const gameReducer = (state: GameState, action: GameAction): GameState => {
-    switch (action.type){
-        case (GameActionType.OPEN_HELP_MODAL):
+    if (action.type === GameActionType.ADD_LETTER) {
+        if (state.readyToGuess) {
+            const currentWord = state.guessedWords[state.currentWordIndex];
+            const newWord = currentWord + action.payload;
+            const newWordISFull = newWord.length === 5;
             return {
-                ...state , helpModalActive:true
+                ...state,
+                guessedWords: state.guessedWords.splice(state.currentWordIndex, 1, newWord),
+                readyToGuess: !newWordISFull,
             }
-        case (GameActionType.CLOSE_HELP_MODAL):
-            return {
-                ...state, helpModalActive:false
-            }
+                    }
     }
-    return state;
+    if (action.type === GameActionType.REMOVE_LETTER) {
+        const currentWord = state.guessedWords[state.currentWordIndex];
+        const newWord = currentWord.slice(0, -1);
+        return {
+            ...state,
+            guessedWords: state.guessedWords.splice(state.currentWordIndex, 1, newWord),
+        }
+    }
+    return state ;
 }
 
 export {gameReducer, gameInitialState, GameActionType};
