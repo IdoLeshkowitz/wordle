@@ -1,4 +1,4 @@
-import {useContext, useEffect} from "react";
+import {createContext, useContext, useEffect} from "react";
 import {GameContext} from "../pages/Game";
 import {GameActionType} from "../gameLogic/gameReducer";
 
@@ -53,18 +53,23 @@ const virtualKeyboardButtons: VirtualKeyboardButton[] = [
     {buttonKey: 'M', buttonSize: 'normal', rowNum: 3},
     {buttonKey: 'BACKSPACE', buttonSize: 'wide', rowNum: 3},
 ]
+const virtualKeyboardRows = [1, 2, 3].map((rowNum) => {
+    return virtualKeyboardButtons.filter((button) => button.rowNum === rowNum)
+});
+const KeyboardHandlerContext = createContext({} as any);
 const Keyboard = () => {
     const {dispatch, state} = useContext(GameContext);
     const {isKeyALetter, isKeyEscape, isKeyBackspace, isKeyEnter} = helperFunctions;
-    const onKeyboardClick = (key: any) =>   {
+    const onKeyboardClick = (key: string) => {
         key = key.toUpperCase();
-        if (isKeyEnter(key))dispatch({type : GameActionType.ENTER});
-        if (isKeyEscape(key))dispatch({type : GameActionType.ESCAPE});
-        if (isKeyBackspace(key))dispatch({type : GameActionType.REMOVE_LETTER});
-        if(isKeyALetter(key)) {dispatch({type: GameActionType.ADD_LETTER, payload: key});
+        if (isKeyEnter(key)) dispatch({type: GameActionType.ENTER});
+        if (isKeyEscape(key)) dispatch({type: GameActionType.ESCAPE});
+        if (isKeyBackspace(key)) dispatch({type: GameActionType.REMOVE_LETTER});
+        if (isKeyALetter(key)) {
+            dispatch({type: GameActionType.ADD_LETTER, payload: key});
         }
     }
-    const convertToKeyAndCallHandler =(e : any)=>{
+    const convertToKeyAndCallHandler = (e: any) => {
         onKeyboardClick(e.key);
     }
     useEffect(() => {
@@ -73,30 +78,48 @@ const Keyboard = () => {
             window.removeEventListener("keydown", convertToKeyAndCallHandler);
         }
     }, []);
-    const keyboardRows = [1, 2, 3]
-    return (<div className="keyboard">
-        {keyboardRows.map((rowNum: number) =>
-            <div className="keyboard-row" key={rowNum}>
-                {virtualKeyboardButtons.filter((virtualKeyboardButton: VirtualKeyboardButton) => virtualKeyboardButton.rowNum === rowNum).map(
-                    (virtualKeyboardButton: VirtualKeyboardButton) => <KeyboardButton
-                        buttonKey={virtualKeyboardButton.buttonKey}
-                        buttonSize={virtualKeyboardButton.buttonSize}
-                        onKeyboardClick={() => onKeyboardClick(virtualKeyboardButton.buttonKey)}
-                        key ={virtualKeyboardButton.buttonKey}/>
+
+    return (
+        <KeyboardHandlerContext.Provider value={{onKeyboardClick}}>
+            <div className="keyboard">
+                {virtualKeyboardRows.map((rowButtons, index) =>
+                    <KeyboardRow key={index}>
+                        {rowButtons}
+                    </KeyboardRow>
                 )}
-            </div>)}
-    </div>)
+            </div>
+        </KeyboardHandlerContext.Provider>
+    )
 }
 
-
-const KeyboardButton = (props: any) => {
-    const {buttonKey, buttonSize, onKeyboardClick} = props;
+const KeyboardButton = (props: { buttonKey: string, buttonSize: string }) => {
+    const {buttonKey, buttonSize} = props;
+    const {onKeyboardClick} = useContext(KeyboardHandlerContext);
+    const getButtonClass = () => {
+        return `keyboard-btn ${buttonSize === 'wide' ? 'wide' : ''}`;
+    }
     return (
-        <button className={`keyboard-btn ${buttonSize === 'wide' ? 'wide' : ''}`}
-                onClick={(buttonKey) => onKeyboardClick(buttonKey)}
+        <button
+            className={getButtonClass()}
+            onClick={() => onKeyboardClick(buttonKey)}
+            key={buttonKey}
         >
             {buttonKey}
         </button>
+    )
+}
+
+const KeyboardRow = ({children}: any) => {
+    return (
+        <div className="keyboard-row">
+            {children.map((button: VirtualKeyboardButton) =>
+                <KeyboardButton
+                    buttonKey={button.buttonKey}
+                    buttonSize={button.buttonSize}
+                    key={button.buttonKey}
+                />
+            )}
+        </div>
     )
 }
 export default Keyboard;
