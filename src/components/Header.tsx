@@ -1,20 +1,28 @@
 import {AiFillInfoCircle} from "react-icons/ai";
-import {useEffect, useRef} from "react";
+import React, {useContext, useEffect, useRef} from "react";
+import {GameActionType} from "../gameLogic/gameActions";
+import {GameContext} from "../pages/Game";
 
 
-const Header = (props: any) => {
-    const {modalActive, setModalActive} = props;
-    const openModal = () => {
-        if (modalActive===false) {
-            console.log('clicked');
-            setModalActive(true);
-        }
-    }
-    return (<header className="game_page-header">
-            <button onClick={openModal} className="game_page-header-info_btn" title="info">
-                <AiFillInfoCircle/>
-            </button>
-        </header>)
+const Header = () => {
+    const {state, dispatch} = useContext(GameContext);
+    return (
+    <header className="game_page-header">
+        <input type="checkbox"
+               id="openModal"
+               className="hidden"
+               onChange={()=>dispatch({type: GameActionType.TOGGLE_HELP_MODAL})}
+               checked={state.helpModalActive}
+        />
+        <label htmlFor="openModal"
+               className="game_page-header-info_btn"
+               title="info"
+        >
+            <AiFillInfoCircle/>
+        </label>
+        <h1>WORDLE</h1>
+    </header>
+    )
 }
 
 export default Header;

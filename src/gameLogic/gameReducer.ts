@@ -4,7 +4,6 @@ import {GameAction, GameActionType} from "./gameActions";
 const gameReducer = (state: GameState, action: GameAction): GameState => {
     const {readyToGuess, guessedWords, currentWordIndex, helpModalActive} = state;
     if (action.type === GameActionType.ADD_LETTER) {
-        if (state.readyToGuess) {
             const currentWord = guessedWords[currentWordIndex] || "";
             const newWord = currentWord + action.payload;
             const newGuessedWords = [...guessedWords];
@@ -14,7 +13,6 @@ const gameReducer = (state: GameState, action: GameAction): GameState => {
             if ((updatedWordIndex) !== currentWordIndex) console.log('moved to a new word')
             if (currentWordIndex > 4) return state;
             return {...state, guessedWords: newGuessedWords, currentWordIndex: updatedWordIndex};
-        }
     }
     if (action.type === GameActionType.REMOVE_LETTER) {
     }
