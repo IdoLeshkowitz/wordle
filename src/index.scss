@@ -53,9 +53,9 @@ button {border: none;cursor: pointer;}
   --font-size-header : 4rem;--font-size-form : 1.5rem;--submit-btn-height: 3rem ;
   &-header {font-size: var(--font-size-header);margin-bottom: 1rem;font-family: var(--font-family-roboto);}
   &-form {font-family: var(--font-family-barlow);font-size:var(--font-size-form);display:flex;flex-direction: column;justify-content: space-evenly;align-items: center;width : 100%; flex-basis: 300px;
-    &-body {display :flex; flex-wrap: wrap;justify-content:center; width : 100%;column-gap: 10rem;
-      & section {
-        & input{font-family:var(--font-family-roboto);line-height: calc(var(--font-size-form )*1.5);}
+    &-body {display :flex; flex-wrap: wrap;justify-content:center; width : 100%;column-gap: 10rem;row-gap: 2rem;
+      & section {display :flex; justify-content: center; max-width : 100% ; column-gap: 2rem;
+        & input{font-family:var(--font-family-roboto);line-height: calc(var(--font-size-form )*1.5); flex-basis:200px;}
       }
     }
     &-submit_btn {height:var(--submit-btn-height); width : var(--submit-btn-height) ; min-height: 50px;
@@ -68,7 +68,7 @@ button {border: none;cursor: pointer;}
 //---------!WELCOME-PAGE!---------//
 .welcome_page {display: flex;flex-direction: column;justify-content: center;align-items: center;position: fixed;right: 0;top: 0;left: 0;bottom: 0;row-gap: 5rem;
   &-header{font-size: 4rem;font-family: var(--font-family-roboto);}
-  &-main{display: flex; width : 100%;justify-content: center; column-gap: 5rem;
+  &-main{display: flex; width : 100%;justify-content: center; column-gap: 5rem;flex-wrap: wrap;row-gap: 2rem;
     &-link{border : 1px solid black; border-radius: 2rem; padding: 2rem; text-decoration: none;color:black;flex-basis : 200px;font-family: var(--font-family-barlow);font-size: 2rem;display: flex;justify-content: center;align-items: center;
       &:hover{background-color: black; color: white; }}
 }

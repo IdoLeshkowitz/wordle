@@ -1,7 +1,8 @@
-import {createContext, useContext, useEffect} from "react";
+import React, {createContext, ReactElement, useContext, useEffect} from "react";
 import {GameContext} from "../pages/Game";
 import {GameActionType} from "../gameLogic/gameReducer";
-
+import {AiOutlineEnter} from "react-icons/ai";
+import {BsReverseBackspaceReverse} from "react-icons/all";
 const helperFunctions = {
     isKeyALetter: (key: string) => {
         return (/^[A-Z]$/.test(key))
@@ -21,6 +22,7 @@ interface VirtualKeyboardButton {
     buttonKey: string,
     buttonSize: string
     rowNum: number;
+    displayed ?: ReactElement ;
 }
 
 const virtualKeyboardButtons: VirtualKeyboardButton[] = [
@@ -43,7 +45,7 @@ const virtualKeyboardButtons: VirtualKeyboardButton[] = [
     {buttonKey: 'J', buttonSize: 'normal', rowNum: 2},
     {buttonKey: 'K', buttonSize: 'normal', rowNum: 2},
     {buttonKey: 'L', buttonSize: 'normal', rowNum: 2},
-    {buttonKey: 'ENTER', buttonSize: 'wide', rowNum: 3},
+    {buttonKey: 'BACKSPACE', buttonSize: 'wide', rowNum: 3 ,displayed: <BsReverseBackspaceReverse size={12} />},
     {buttonKey: 'Z', buttonSize: 'normal', rowNum: 3},
     {buttonKey: 'X', buttonSize: 'normal', rowNum: 3},
     {buttonKey: 'C', buttonSize: 'normal', rowNum: 3},
@@ -51,7 +53,7 @@ const virtualKeyboardButtons: VirtualKeyboardButton[] = [
     {buttonKey: 'B', buttonSize: 'normal', rowNum: 3},
     {buttonKey: 'N', buttonSize: 'normal', rowNum: 3},
     {buttonKey: 'M', buttonSize: 'normal', rowNum: 3},
-    {buttonKey: 'BACKSPACE', buttonSize: 'wide', rowNum: 3},
+    {buttonKey: 'ENTER', buttonSize: 'wide', rowNum: 3, displayed: <AiOutlineEnter size={12}/>},
 ]
 const virtualKeyboardRows = [1, 2, 3].map((rowNum) => {
     return virtualKeyboardButtons.filter((button) => button.rowNum === rowNum)
@@ -92,8 +94,8 @@ const Keyboard = () => {
     )
 }
 
-const KeyboardButton = (props: { buttonKey: string, buttonSize: string }) => {
-    const {buttonKey, buttonSize} = props;
+const KeyboardButton = (props: { buttonKey: string, buttonSize: string , displayed?: ReactElement}) => {
+    const {buttonKey, buttonSize, displayed} = props;
     const {onKeyboardClick} = useContext(KeyboardHandlerContext);
     const getButtonClass = () => {
         return `keyboard-btn ${buttonSize === 'wide' ? 'wide' : ''}`;
@@ -104,7 +106,7 @@ const KeyboardButton = (props: { buttonKey: string, buttonSize: string }) => {
             onClick={() => onKeyboardClick(buttonKey)}
             key={buttonKey}
         >
-            {buttonKey}
+            {displayed|| buttonKey}
         </button>
     )
 }
@@ -117,6 +119,7 @@ const KeyboardRow = ({children}: any) => {
                     buttonKey={button.buttonKey}
                     buttonSize={button.buttonSize}
                     key={button.buttonKey}
+                    displayed={button.displayed}
                 />
             )}
         </div>
