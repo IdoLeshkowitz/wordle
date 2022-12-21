@@ -1,3 +1,4 @@
+
 export interface GameState {
     helpModalActive: boolean;
     guessedWords: string [];
@@ -5,6 +6,8 @@ export interface GameState {
     readyToGuess: boolean;
     amountOfGuesses : number;
      guessedWordLength: number;
+
+
 }
 
 export const gameInitialState: GameState = {

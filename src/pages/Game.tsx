@@ -7,6 +7,7 @@ import {HelpModal} from "../components/HelpModal";
 import Header from "../components/Header";
 
 export const GameContext = React.createContext({} as any);
+
 const Game = () => {
     const [state, dispatch] = useReducer(gameReducer, gameInitialState);
     return (

@@ -1,14 +1,19 @@
-import {createBrowserRouter ,Route} from "react-router-dom";
+import {createBrowserRouter} from "react-router-dom";
 import Welcome from "./pages/Welcome";
-import {ReactElement } from "react";
 import Game from "./pages/Game";
-export const router  = createBrowserRouter([
+import SignIn from "./pages/SignIn";
+
+export const router = createBrowserRouter([
     {
-        path : '/',
-        element : <Welcome/>,
+        path: '/',
+        element: <Welcome/>,
     },
     {
-        path : '/game-page',
-        element : <Game/>
+        path: '/game-page',
+        element: <Game/>
+    },
+    {
+        path: '/sign-in',
+        element: <SignIn/>
     }
 ])
