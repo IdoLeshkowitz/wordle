@@ -7,7 +7,7 @@ export interface GameState {
 
 export const gameInitialState: GameState = {
     helpModalActive: true,
-    guessedWords: [],
+    guessedWords: ["","","","",""],
     currentWordIndex: 0,
     readyToGuess: true,
 }
