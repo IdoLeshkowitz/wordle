@@ -15,6 +15,11 @@ const gameReducer = (state: GameState, action: GameAction): GameState => {
             return {...state, guessedWords: newGuessedWords, currentWordIndex: updatedWordIndex};
     }
     if (action.type === GameActionType.REMOVE_LETTER) {
+        const currentWord = guessedWords[currentWordIndex] || "";
+        const newWord = currentWord.slice(0, -1);
+        const newGuessedWords = [...guessedWords];
+        newGuessedWords[currentWordIndex] = newWord;
+        return {...state, guessedWords: newGuessedWords};
     }
 
     if (action.type === GameActionType.ENTER) {
