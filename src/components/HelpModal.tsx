@@ -1,6 +1,6 @@
 import {GameContext} from "../pages/Game";
 import {useContext} from "react";
-import {GameActionType} from "../gameLogic/gameReducer";
+import {GameActionType} from "../features/game/gameReducer";
 
 export const HelpModal = () => {
     const {state, dispatch} = useContext(GameContext);

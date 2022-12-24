@@ -1,8 +1,8 @@
 import React, {createContext, ReactElement, useContext, useEffect} from "react";
-import {GameContext} from "../pages/Game";
-import {GameActionType} from "../gameLogic/gameReducer";
 import {AiOutlineEnter} from "react-icons/ai";
 import {BsReverseBackspaceReverse} from "react-icons/all";
+import {useAppDispatch, useAppSelector} from "../hooks";
+import {addLetter,deleteLetter} from "../features/game/gameSlice";
 const helperFunctions = {
     isKeyALetter: (key: string) => {
         return (/^[A-Z]$/.test(key))
@@ -22,9 +22,8 @@ interface VirtualKeyboardButton {
     buttonKey: string,
     buttonSize: string
     rowNum: number;
-    displayed ?: ReactElement ;
+    displayed?: ReactElement;
 }
-
 const virtualKeyboardButtons: VirtualKeyboardButton[] = [
     {buttonKey: 'Q', buttonSize: 'normal', rowNum: 1},
     {buttonKey: 'W', buttonSize: 'normal', rowNum: 1},
@@ -45,7 +44,7 @@ const virtualKeyboardButtons: VirtualKeyboardButton[] = [
     {buttonKey: 'J', buttonSize: 'normal', rowNum: 2},
     {buttonKey: 'K', buttonSize: 'normal', rowNum: 2},
     {buttonKey: 'L', buttonSize: 'normal', rowNum: 2},
-    {buttonKey: 'BACKSPACE', buttonSize: 'wide', rowNum: 3 ,displayed: <BsReverseBackspaceReverse size={12} />},
+    {buttonKey: 'BACKSPACE', buttonSize: 'wide', rowNum: 3, displayed: <BsReverseBackspaceReverse size={12}/>},
     {buttonKey: 'Z', buttonSize: 'normal', rowNum: 3},
     {buttonKey: 'X', buttonSize: 'normal', rowNum: 3},
     {buttonKey: 'C', buttonSize: 'normal', rowNum: 3},
@@ -59,30 +58,45 @@ const virtualKeyboardRows = [1, 2, 3].map((rowNum) => {
     return virtualKeyboardButtons.filter((button) => button.rowNum === rowNum)
 });
 const KeyboardHandlerContext = createContext({} as any);
+
+
 const Keyboard = () => {
-    const {dispatch, state} = useContext(GameContext);
     const {isKeyALetter, isKeyEscape, isKeyBackspace, isKeyEnter} = helperFunctions;
-    const onKeyboardClick = (key: string) => {
-        key = key.toUpperCase();
-        if (isKeyEnter(key)) dispatch({type: GameActionType.ENTER});
-        if (isKeyEscape(key)) dispatch({type: GameActionType.ESCAPE});
-        if (isKeyBackspace(key)) dispatch({type: GameActionType.REMOVE_LETTER});
-        if (isKeyALetter(key)) {
-            dispatch({type: GameActionType.ADD_LETTER, payload: key});
+    const {waitingForInput} = useAppSelector(state => state.game);
+    const dispatch= useAppDispatch()
+    const onLetterKeyClick = (letterKey: string) => {
+        if (waitingForInput) {
+            dispatch(addLetter(letterKey))
         }
     }
-    const convertToKeyAndCallHandler = (e: any) => {
-        onKeyboardClick(e.key);
+
+    const onFunctionKeyClick = (functionKey: string) => {
+        if(isKeyBackspace(functionKey)){
+            dispatch(deleteLetter())
+        }
+    }
+    const keyPushedHandler = (e: KeyboardEvent | string  ) : void  => {
+        let key = '' ;
+        if (e instanceof KeyboardEvent) {
+            key = e.key.toUpperCase();
+        }
+        else if (typeof e === 'string') {
+            key = e.toUpperCase();
+        }
+            //check key type and call handler
+            if (isKeyALetter(key)) onLetterKeyClick(key);//A-Z
+            if (isKeyBackspace(key)) onFunctionKeyClick(key);//BACKSPACE
+            if (isKeyEnter(key)) onFunctionKeyClick(key);//ENTER
     }
     useEffect(() => {
-        window.addEventListener("keydown", convertToKeyAndCallHandler);
+        window.addEventListener("keydown", keyPushedHandler);
         return () => {
-            window.removeEventListener("keydown", convertToKeyAndCallHandler);
+            window.removeEventListener("keydown", keyPushedHandler);
         }
     }, []);
 
     return (
-        <KeyboardHandlerContext.Provider value={{onKeyboardClick}}>
+        <KeyboardHandlerContext.Provider value={keyPushedHandler}>
             <div className="keyboard">
                 {virtualKeyboardRows.map((rowButtons, index) =>
                     <KeyboardRow key={index}>
@@ -94,19 +108,19 @@ const Keyboard = () => {
     )
 }
 
-const KeyboardButton = (props: { buttonKey: string, buttonSize: string , displayed?: ReactElement}) => {
+const KeyboardButton = (props: { buttonKey: string, buttonSize: string, displayed?: ReactElement }) => {
     const {buttonKey, buttonSize, displayed} = props;
-    const {onKeyboardClick} = useContext(KeyboardHandlerContext);
+    const keyPushedHandler = useContext(KeyboardHandlerContext);
     const getButtonClass = () => {
         return `keyboard-btn ${buttonSize === 'wide' ? 'wide' : ''}`;
     }
     return (
         <button
             className={getButtonClass()}
-            onClick={() => onKeyboardClick(buttonKey)}
+            onClick={() => keyPushedHandler(buttonKey)}
             key={buttonKey}
         >
-            {displayed|| buttonKey}
+            {displayed || buttonKey}
         </button>
     )
 }

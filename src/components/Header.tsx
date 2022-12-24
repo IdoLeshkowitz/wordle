@@ -1,6 +1,6 @@
 import {AiFillInfoCircle} from "react-icons/ai";
 import React, {useContext, useEffect, useRef} from "react";
-import {GameActionType} from "../gameLogic/gameActions";
+import {GameActionType} from "../features/game/gameActions";
 import {GameContext} from "../pages/Game";
 
 
