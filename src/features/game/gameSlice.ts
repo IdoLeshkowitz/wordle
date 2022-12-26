@@ -6,11 +6,9 @@ export interface GameState {
     currentWordIndex: number;
     numberOfWords: number;
     charsInWord: number;
-    waitingForInput: boolean;
 }
 
 const initialState: GameState = {
-    waitingForInput: true,
     guessedWords: [],
     currentWordIndex: 0,
     numberOfWords: 5,
@@ -22,15 +20,7 @@ const gameSlice = createSlice({
     name: 'game',
     reducers: {
         addLetter: (state, action: PayloadAction<string>) => {
-            const updatedWord = state.guessedWords[state.currentWordIndex] || '' + action.payload;
-            const isGameFinished = updatedWordIndex === state.numberOfWords;
-            const getUpdatedGuessedWords = () => {
-                const updatedGuessedWords = [...state.guessedWords];
-                updatedGuessedWords[state.currentWordIndex] = updatedWord;
-                return updatedGuessedWords;
-            }
-            state.currentWordIndex = updatedWord.length === state.charsInWord ? state.currentWordIndex + 1 : state.currentWordIndex;
-            state.guessedWords = getUpdatedGuessedWords();
+            state.guessedWords[state.currentWordIndex] = (state.guessedWords[state.currentWordIndex] || '') + action.payload;
         },
         deleteLetter: (state) => {
             state.guessedWords[state.currentWordIndex] = state.guessedWords[state.currentWordIndex].slice(0, -1);
@@ -39,4 +29,5 @@ const gameSlice = createSlice({
 })
 
 export const {addLetter, deleteLetter} = gameSlice.actions;
+
 export default gameSlice.reducer

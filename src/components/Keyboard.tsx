@@ -1,22 +1,8 @@
 import React, {createContext, ReactElement, useContext, useEffect} from "react";
 import {AiOutlineEnter} from "react-icons/ai";
 import {BsReverseBackspaceReverse} from "react-icons/all";
-import {useAppDispatch, useAppSelector} from "../hooks";
-import {addLetter,deleteLetter} from "../features/game/gameSlice";
-const helperFunctions = {
-    isKeyALetter: (key: string) => {
-        return (/^[A-Z]$/.test(key))
-    },
-    isKeyBackspace: (key: string) => {
-        return (key === "BACKSPACE")
-    },
-    isKeyEscape: (key: string) => {
-        return (key === "ESCAPE")
-    },
-    isKeyEnter: (key: string) => {
-        return (key === "ENTER")
-    },
-}
+import {useAppDispatch} from "../hooks";
+import {addLetter} from "../features/game/gameSlice";
 
 interface VirtualKeyboardButton {
     buttonKey: string,
@@ -24,6 +10,7 @@ interface VirtualKeyboardButton {
     rowNum: number;
     displayed?: ReactElement;
 }
+
 const virtualKeyboardButtons: VirtualKeyboardButton[] = [
     {buttonKey: 'Q', buttonSize: 'normal', rowNum: 1},
     {buttonKey: 'W', buttonSize: 'normal', rowNum: 1},
@@ -61,32 +48,16 @@ const KeyboardHandlerContext = createContext({} as any);
 
 
 const Keyboard = () => {
-    const {isKeyALetter, isKeyEscape, isKeyBackspace, isKeyEnter} = helperFunctions;
-    const {waitingForInput} = useAppSelector(state => state.game);
-    const dispatch= useAppDispatch()
-    const onLetterKeyClick = (letterKey: string) => {
-        if (waitingForInput) {
-            dispatch(addLetter(letterKey))
-        }
-    }
+    const dispatch = useAppDispatch()
 
-    const onFunctionKeyClick = (functionKey: string) => {
-        if(isKeyBackspace(functionKey)){
-            dispatch(deleteLetter())
-        }
-    }
-    const keyPushedHandler = (e: KeyboardEvent | string  ) : void  => {
-        let key = '' ;
+    const keyPushedHandler = (e: KeyboardEvent | string): void => {
+        let key = '';
         if (e instanceof KeyboardEvent) {
             key = e.key.toUpperCase();
-        }
-        else if (typeof e === 'string') {
+        } else if (typeof e === 'string') {
             key = e.toUpperCase();
         }
-            //check key type and call handler
-            if (isKeyALetter(key)) onLetterKeyClick(key);//A-Z
-            if (isKeyBackspace(key)) onFunctionKeyClick(key);//BACKSPACE
-            if (isKeyEnter(key)) onFunctionKeyClick(key);//ENTER
+        dispatch(addLetter(key));
     }
     useEffect(() => {
         window.addEventListener("keydown", keyPushedHandler);
