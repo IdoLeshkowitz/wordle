@@ -50,19 +50,14 @@ const KeyboardHandlerContext = createContext({} as any);
 const Keyboard = () => {
     const dispatch = useAppDispatch()
 
-    const keyPushedHandler = (e: KeyboardEvent | string): void => {
-        let key = '';
-        if (e instanceof KeyboardEvent) {
-            key = e.key.toUpperCase();
-        } else if (typeof e === 'string') {
-            key = e.toUpperCase();
-        }
-        dispatch(addLetter(key));
+    const keyPushedHandler = (pressedKey :  string): void => {
+        dispatch(addLetter(pressedKey));
+        console.log('called')
     }
     useEffect(() => {
-        window.addEventListener("keydown", keyPushedHandler);
+        window.addEventListener("keydown",(e)=>keyPushedHandler(e.key.toUpperCase()));
         return () => {
-            window.removeEventListener("keydown", keyPushedHandler);
+            window.removeEventListener("keydown", (e)=>keyPushedHandler(e.key.toUpperCase()));
         }
     }, []);
 

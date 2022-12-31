@@ -1,4 +1,4 @@
-import {User} from "./userState";
+import {User} from "./IUser";
 
 export enum UserActionType {
     SIGN_IN = 'SIGN_IN',

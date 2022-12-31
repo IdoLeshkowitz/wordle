@@ -1,11 +1,14 @@
 import {configureStore, getDefaultMiddleware, MiddlewareArray} from "@reduxjs/toolkit";
 import gameReducer from "./features/game/gameSlice";
-import {keyboardMiddleware} from "./middleware/keyboardMiddleware";
+import userReducer from "./features/user/userSlice";
+import {keyValidtorMiddleware} from "./middleware/keyValidtor";
+import {actionValidatorMiddleware} from "./middleware/actionValidator";
+
 
 
 export const store = configureStore({
-    reducer: {game: gameReducer},
-    middleware :  (getDefaultMiddleware) => getDefaultMiddleware().concat(keyboardMiddleware)
+    reducer: {game: gameReducer, user: userReducer},
+    middleware :  (getDefaultMiddleware) => getDefaultMiddleware().concat(keyValidtorMiddleware, actionValidatorMiddleware)
 });
 
 export  type RootState = ReturnType<typeof store.getState>;

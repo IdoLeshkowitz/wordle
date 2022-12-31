@@ -1,19 +1,8 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {initialState} from "./IGame";
 
 
-export interface GameState {
-    guessedWords: string [];
-    currentWordIndex: number;
-    numberOfWords: number;
-    charsInWord: number;
-}
 
-const initialState: GameState = {
-    guessedWords: [],
-    currentWordIndex: 0,
-    numberOfWords: 5,
-    charsInWord: 5,
-}
 
 const gameSlice = createSlice({
     initialState,
