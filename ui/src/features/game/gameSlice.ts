@@ -17,6 +17,7 @@ const gameSlice = createSlice({
     },
 })
 
+
 export const {addLetter, deleteLetter} = gameSlice.actions;
 
 export default gameSlice.reducer
