@@ -1,4 +1,4 @@
-import {useAppSelector} from "../hooks";
+import {useAppSelector} from "../redux /store /hooks";
 const helperFunctions = {
     getDisplayItemClass: (index: number, focusedItemIndex: number) => {
         if (index === focusedItemIndex) {
@@ -10,25 +10,32 @@ const helperFunctions = {
         const focusedItemIndex = displayGrid.findIndex((item) => item === '');
         return focusedItemIndex;
     },
-    getDisplayGrid: (guessedWords: string[], amountOfGuesses: number, guessedWordLength: number) => {
-        const output = Array(amountOfGuesses * guessedWordLength).fill('');
+    mapGuessedWordsToCharsArray: (guessedWords: string[], numberOfGuesses : number , charsInWord : number) => {
+        const output = [];
         for (let i = 0; i < guessedWords.length; i++) {
             for (let j = 0; j < guessedWords[i].length; j++) {
-                output[i * guessedWordLength + j] = guessedWords[i][j];
+                output.push(guessedWords[i][j]);
             }
         }
+        const totalAmountOfGuesses = numberOfGuesses * charsInWord;
+        for (let i = 0; i < totalAmountOfGuesses ; i++) {
+            if (output[i] === undefined) {
+                output.push('');
+            }
+        }
+
         return output;
-    },
+    }
 
 }
 const Display = ({children}: any) => {
-    const {guessedWords,charsInWord,numberOfWords } = useAppSelector((state) => state.game);
-    const {getDisplayGrid, getFocusedItemIndex, getDisplayItemClass} = helperFunctions;
-    const displayGrid = getDisplayGrid(guessedWords, numberOfWords, charsInWord);//return array with string for each display item [item1,item2,item3...]
-    const focusedItemIndex = getFocusedItemIndex(displayGrid);//returns the index of the focused item
+    const {settings : {numberOfWords , charsInWord }, previousGuesses , currentGuess} = useAppSelector((state) => state.game);
+    const { getFocusedItemIndex, getDisplayItemClass, mapGuessedWordsToCharsArray} = helperFunctions;
+    const charsFormatedGuesses = mapGuessedWordsToCharsArray([...previousGuesses, currentGuess], numberOfWords, charsInWord);
+    const focusedItemIndex = getFocusedItemIndex(charsFormatedGuesses);//returns the index of the focused item
     return (
         <div className="display">
-            {displayGrid.map((displayItem, index) =>
+            {charsFormatedGuesses.map((displayItem, index) =>
                 <div className={getDisplayItemClass(index, focusedItemIndex)}
                      key={index}
                 >

@@ -1,8 +1,9 @@
-import React, {createContext, ReactElement, useContext, useEffect} from "react";
+import React, {Context, createContext, ReactElement, useEffect} from "react";
 import {AiOutlineEnter} from "react-icons/ai";
 import {BsReverseBackspaceReverse} from "react-icons/all";
-import {useAppDispatch} from "../hooks";
-import {addLetter} from "../features/game/gameSlice";
+import {useAppDispatch} from "../redux /store /hooks";
+import {onKeyUp} from "../redux /middleware/keyboard/keyboardMiddleware";
+import {useMemo} from "react";
 
 interface VirtualKeyboardButton {
     buttonKey: string,
@@ -44,53 +45,23 @@ const virtualKeyboardButtons: VirtualKeyboardButton[] = [
 const virtualKeyboardRows = [1, 2, 3].map((rowNum) => {
     return virtualKeyboardButtons.filter((button) => button.rowNum === rowNum)
 });
-const KeyboardHandlerContext = createContext({} as any);
-
-
-const Keyboard = () => {
-    const dispatch = useAppDispatch()
-
-    const keyPushedHandler = (pressedKey :  string): void => {
-        dispatch(addLetter(pressedKey));
-        console.log('called')
-    }
-    useEffect(() => {
-        window.addEventListener("keydown",(e)=>keyPushedHandler(e.key.toUpperCase()));
-        return () => {
-            window.removeEventListener("keydown", (e)=>keyPushedHandler(e.key.toUpperCase()));
-        }
-    }, []);
-
-    return (
-        <KeyboardHandlerContext.Provider value={keyPushedHandler}>
-            <div className="keyboard">
-                {virtualKeyboardRows.map((rowButtons, index) =>
-                    <KeyboardRow key={index}>
-                        {rowButtons}
-                    </KeyboardRow>
-                )}
-            </div>
-        </KeyboardHandlerContext.Provider>
-    )
-}
 
 const KeyboardButton = (props: { buttonKey: string, buttonSize: string, displayed?: ReactElement }) => {
     const {buttonKey, buttonSize, displayed} = props;
-    const keyPushedHandler = useContext(KeyboardHandlerContext);
+    const dispatch = useAppDispatch();
     const getButtonClass = () => {
         return `keyboard-btn ${buttonSize === 'wide' ? 'wide' : ''}`;
     }
     return (
         <button
             className={getButtonClass()}
-            onClick={() => keyPushedHandler(buttonKey)}
             key={buttonKey}
+            onClick={() => dispatch(onKeyUp(buttonKey))}
         >
             {displayed || buttonKey}
         </button>
     )
 }
-
 const KeyboardRow = ({children}: any) => {
     return (
         <div className="keyboard-row">
@@ -104,5 +75,36 @@ const KeyboardRow = ({children}: any) => {
             )}
         </div>
     )
+};
+const Keyboard = () => {
+    const dispatch = useAppDispatch();
+    useEffect(() => {
+        window.addEventListener(
+            "keyup",
+            (e) => {
+                dispatch(onKeyUp(e.key))
+            }
+        );
+        return () => {
+            window.removeEventListener(
+                "keyup",
+                (e) => {
+                    dispatch(onKeyUp(e.key))
+                }
+            );
+        }
+    }, []);
+
+    return (
+        <div className="keyboard">
+            {virtualKeyboardRows.map((rowButtons, index) =>
+                <KeyboardRow key={index}>
+                    {rowButtons}
+                </KeyboardRow>
+            )}
+        </div>
+    )
 }
-export default Keyboard;
+
+
+export default Keyboard

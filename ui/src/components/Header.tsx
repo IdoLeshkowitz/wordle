@@ -1,28 +1,26 @@
+import React from "react";
 import {AiFillInfoCircle} from "react-icons/ai";
-import React, {useContext, useEffect, useRef} from "react";
-import {GameActionType} from "../features/game/gameActions";
-import {GameContext} from "../pages/Game";
-
+import {useAppDispatch, useAppSelector} from "../redux /store /hooks";
+import {ModalsCollection, openModal} from "../redux /features/modals/modalSlice";
+import {signOut} from "../redux /features/user/userSlice";
+import {User} from "../redux /features/user/User";
 
 const Header = () => {
-    const {state, dispatch} = useContext(GameContext);
-    return (
-    <header className="game_page-header">
-        <input type="checkbox"
-               id="openModal"
-               className="hidden"
-               onChange={()=>dispatch({type: GameActionType.TOGGLE_HELP_MODAL})}
-               checked={state.helpModalActive}
-        />
-        <label htmlFor="openModal"
-               className="game_page-header-info_btn"
-               title="info"
-        >
-            <AiFillInfoCircle/>
-        </label>
+    const currentUser : User = useAppSelector(state => state.user.currentUser);
+    const dispatch = useAppDispatch();
+    console.log(currentUser);
+    return (<header className="game_page-header">
+        <button onClick={() => dispatch(openModal(ModalsCollection.help))}><AiFillInfoCircle/></button>
+        {currentUser.userName === 'guest' ?
+            <button onClick={() => dispatch(openModal(ModalsCollection.signIn))}>signIn</button>
+            :
+        <>
+            <span>hello {currentUser.userName}</span>
+            <button onClick={()=>dispatch(signOut())}>signOut</button>
+        </>}
+
         <h1>WORDLE</h1>
-    </header>
-    )
+    </header>)
 }
 
 export default Header;
